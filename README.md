@@ -157,6 +157,16 @@ Komponen scraping (`src/scrape_sample.py`) memeriksa `robots.txt` lebih dulu dan
 berhenti bila aksesnya dilarang. Hasil pemeriksaan dicatat sebagai temuan, bukan
 rintangan yang diakali.
 
+## Sumber data dan lisensi
+
+`database.db` berisi hasil olahan kedua dataset berikut, disebarkan ulang
+sesuai lisensinya masing-masing:
+
+| Dataset | Pembuat di Kaggle | Lisensi |
+|---|---|---|
+| [Indonesia E-Commerce Dataset: Tokopedia Listings](https://www.kaggle.com/datasets/pandaa12/indonesia-e-commerce-dataset-tokopedia-listings) | pandaa12 | Apache 2.0 |
+| [Tokopedia Product Reviews](https://www.kaggle.com/datasets/farhan999/tokopedia-product-reviews) | farhan999 | MIT |
+
 ## Stack
 
 Python · pandas · SQLite · scikit-learn · SciPy · Sastrawi (stemming Bahasa
