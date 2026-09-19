@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.ipynb_checkpoints/
+.pytest_cache/
+.streamlit/secrets.toml
+
+# Data mentah tidak ikut di-commit; unduh sendiri dari Kaggle (lihat README).
+data/raw/*.csv
+# Hasil olahan bisa dibuat ulang dengan run_pipeline.py. Yang ikut di-commit
+# hanya database.db, karena dashboard yang di-deploy membacanya langsung.
+data/processed/

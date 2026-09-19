@@ -1,0 +1,32 @@
+{
+  "ambang": 0.5,
+  "jumlah_latih": 31550,
+  "jumlah_uji": 9057,
+  "negatif_uji": 291,
+  "produk_uji": 733,
+  "hasil": [
+    {
+      "pendekatan": "Baseline: selalu 'bukan negatif'",
+      "akurasi": 0.967870155680689,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    {
+      "pendekatan": "Aturan kata kunci",
+      "akurasi": 0.6173125759081374,
+      "precision": 0.05742960691385559,
+      "recall": 0.7079037800687286,
+      "f1": 0.10624033006704486
+    },
+    {
+      "pendekatan": "Model (TF-IDF + regresi logistik)",
+      "akurasi": 0.9445732582532848,
+      "precision": 0.3446244477172312,
+      "recall": 0.8041237113402062,
+      "f1": 0.4824742268041237
+    }
+  ],
+  "jumlah_latih_final": 40607,
+  "versi_sklearn": "1.9.1"
+}

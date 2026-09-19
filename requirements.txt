@@ -1,0 +1,13 @@
+# Versi dikunci persis: model sentimen disimpan dengan pickle, yang tidak dijamin
+# terbaca oleh versi scikit-learn, numpy, atau joblib yang berbeda.
+pandas==3.0.5
+numpy==2.5.3
+scipy==1.18.1
+scikit-learn==1.9.1
+joblib==1.6.0
+streamlit==1.64.0
+plotly==7.1.0
+Sastrawi==1.0.1
+requests==2.34.2
+beautifulsoup4==4.15.0
+matplotlib==3.11.2
