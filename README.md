@@ -2,7 +2,13 @@
 
 Riset pasar Tokopedia dari dua sisi: apa yang dijual penjual (29.519 listing produk) dan apa yang dirasakan pembeli (40.607 ulasan berbahasa Indonesia). Hasilnya berupa delapan notebook analisis, satu model sentimen, dan dashboard Streamlit dua halaman.
 
-<!-- Link demo dan screenshot dashboard ditambahkan setelah deploy. -->
+Dashboard: [tokopedia-market-dashboard.streamlit.app](https://tokopedia-market-dashboard.streamlit.app/)
+
+Aplikasi di Streamlit Community Cloud akan tidur kalau tidak dikunjungi selama 12 jam. Kalau muncul tombol untuk membangunkannya, klik tombol itu dan tunggu sekitar satu menit.
+
+![Halaman Pasar Produk](docs/dashboard_pasar_produk.png)
+
+![Halaman Analisis Ulasan](docs/dashboard_analisis_ulasan.png)
 
 ## Pertanyaan yang dijawab
 
