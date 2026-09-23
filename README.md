@@ -29,7 +29,7 @@ Dari data ulasan:
 
 - Rating 5.0 lebih sering berarti produk baru punya sedikit pembeli, bukan produk terbaik. Median jumlah terjual produk ber-rating 5.0 hanya 16, sedangkan produk ber-rating 4.9 mencapai 500.
 - Produk berdiskon lebih laris (median terjual 100 dibanding 26), tetapi diskon besar tidak menjamin laris. Dua pertiga produk dengan diskon di atas 50% tetap terjual di bawah 1.000.
-- Kata "premium" di nama produk justru berkaitan dengan harga di bawah median kategorinya (0,83 kali), sedangkan "original" dan "official" berkaitan dengan harga 1,35 sampai 1,48 kali median kategori.
+- Kata "premium" di nama produk justru berkaitan dengan harga di bawah median kategorinya (0,82 kali), sedangkan "original" dan "official" berkaitan dengan harga 1,35 sampai 1,55 kali median kategori.
 - DKI Jakarta menyumbang 46% toko dan 51% total terjual. Bersama Jawa Barat dan Banten, porsinya sekitar 90%.
 - Kualitas produk adalah sumber keluhan terbesar (disebut di 28% ulasan negatif, dibanding 16% ulasan positif). Pengiriman dan pelayanan penjual justru lebih sering dipuji daripada dikeluhkan.
 - Di kategori handphone, 38% keluhan berasal dari hanya dua produk.
@@ -56,9 +56,10 @@ Notebook 06 bagian 10 menguji beberapa kemungkinan penyebab:
 |---|---|
 | Pengaturan model kurang tepat | `C` sampai 1000, fitur potongan huruf, dan gabungan fitur kata dan huruf tidak lebih baik dari model akhir |
 | Data kurang | Skor naik dari 0,53 (184 ulasan negatif) ke 0,63 (738), tetapi kenaikannya terus mengecil |
-| Label tidak cocok dengan isi ulasan | Penyebab terbesar. Sekitar 19% ulasan bintang 1-2 tidak berisi keluhan sama sekali ("Mantap", "Thanks"), dan banyak ulasan bintang 4-5 berisi keluhan jelas ("barang yang dikirim rusak, tidak bisa dipakai") |
+| Label tidak cocok dengan isi ulasan | Diperiksa manual. Di ulasan bintang 1-2 hanya sekitar 4% yang tidak berisi keluhan. Tetapi dari 60 sampel alarm palsu, 62% ternyata keluhan berbintang 4-5 ("kainnya kurang kuat, baru dipakai sekali sobek"). Precision yang terukur 68%, sedangkan perkiraan precision sebenarnya sekitar 88% |
+| Keterbatasan model berbasis kata | Dari 138 ulasan negatif yang paling yakin dilewatkan model, 77% adalah keluhan sungguhan, umumnya pendek atau memakai kata keluhan yang jarang ("Pengiriman lama", "Deker nya kekecilan") |
 
-Label dibuat dari bintang, sehingga batas atas recall model berbasis teks sekitar 80%, apa pun modelnya. Langkah berikutnya yang paling menjanjikan adalah melabeli ulang sebagian ulasan berdasarkan isinya, bukan mengganti model.
+Jadi skor tertahan oleh dua hal: label yang keliru menekan precision yang terukur, dan keterbatasan model berbasis kata menekan recall. Langkah berikutnya yang paling menjanjikan adalah membuat data uji berlabel manual, lalu menangani negasi dan keluhan pendek, misalnya dengan model seperti IndoBERT. Hasil pemeriksaan manual ada di `Dataset/manual/cek_label_sentimen.csv`.
 
 Dua model tambahan dicoba di notebook 08 dan hasilnya dilaporkan apa adanya. Menebak kategori dari teks ulasan hanya mencapai akurasi 41% (patokan 39%), karena kebanyakan ulasan membahas pengiriman dan penjual, bukan produknya. Model yang sama mencapai akurasi 97% kalau diberi nama produk, jadi batasnya ada di informasi dalam teks ulasan, bukan di model. Menebak bintang 1 sampai 5 tidak bisa unggul di semua ukuran sekaligus, karena ulasan bintang 4 dan 5 hampir tidak bisa dibedakan dari teksnya. Teks yang sama persis, seperti "terimakasih" (391 ulasan), diberi bintang 5 oleh 71% pembeli dan bintang 4 oleh 26% pembeli. Kedua hasil ini menjadi alasan model sentimen memakai dua kelas saja.
 
@@ -89,15 +90,15 @@ Sistem rekomendasi tidak dibuat, karena dataset tidak memuat data pembeli. Sebag
 - Jumlah terjual dan jumlah ulasan tersimpan sebagai teks dengan belasan format, misalnya "1rb+ terjual", "4.95rb+", dan "1jt+". Arti tanda titik juga tidak konsisten: "1.000 ulasan" memakai titik sebagai pemisah ribuan, sedangkan "1.2rb ulasan" memakai titik sebagai desimal.
 - Sekitar 34% URL produk ternyata hanya link halaman toko, sehingga URL tidak bisa dipakai untuk mendeteksi duplikat.
 - Lokasi toko ditulis dalam 322 variasi, termasuk 2.834 baris yang hanya berlokasi "Indonesia". Lokasi dipetakan ke kota dan provinsi dengan tabel referensi buatan sendiri.
-- Dataset produk tidak punya kolom kategori, jadi kategori dibuat dari kata kunci nama produk dengan pencocokan kata utuh.
+- Dataset produk tidak punya kolom kategori, jadi kategori dibuat dari kata kunci nama produk dengan pencocokan kata utuh. Kata yang ambigu ditangani dengan frasa khusus yang dicek lebih dulu, misalnya "mobil mobilan" (mainan, bukan otomotif) dan "rak sepatu" (rumah tangga, bukan fashion). Akurasinya diukur dengan memeriksa 200 produk acak secara manual: sekitar 90% produk yang diberi kategori tergolong dengan benar (kisaran 95%: 86% sampai 94%), naik dari 84% pada versi awal.
 - Teks ulasan berisi kode HTML, huruf berulang ("baguuus"), dan singkatan. Kata "tidak" saja muncul dalam 10 ejaan berbeda.
 - Kedua dataset berasal dari periode dan sumber berbeda, sehingga tidak bisa digabung per produk. Keduanya hanya disandingkan di level kategori.
 
 ## Keterbatasan
 
 - Jumlah terjual adalah batas bawah, karena "1rb+" berarti minimal 1.000.
-- Kategori berbasis kata kunci tidak sempurna, dan 11% produk masuk "Lainnya".
-- Label sentimen berasal dari rating. Sebagian kecil ulasan (sekitar 4% dari ulasan bintang 1 dan 2) isinya justru pujian.
+- Kategori berbasis kata kunci tidak sempurna. Sekitar 1 dari 10 produk yang diberi kategori masih salah golong, dan 8% produk masuk "Lainnya".
+- Label sentimen berasal dari rating. Sebagian kecil ulasan bintang 1 dan 2 (sekitar 4%) isinya justru pujian, dan sebaliknya cukup banyak ulasan bintang 4 dan 5 berisi keluhan.
 - Ulasan berasal dari tahun 2019 dan dari sekitar 160 toko, dengan ulasan negatif yang didominasi kategori handphone.
 - Semua data adalah potret satu waktu, sehingga hasilnya menunjukkan hubungan, bukan sebab-akibat.
 
@@ -118,6 +119,7 @@ Sistem rekomendasi tidak dibuat, karena dataset tidak memuat data pembeli. Sebag
 ├── models/                   model sentimen dan skor evaluasinya
 └── Dataset/
     ├── raw/                  data asli dan tabel referensi lokasi, tidak pernah diubah
+    ├── manual/               hasil pemeriksaan manual: kategori produk dan label sentimen
     └── processed/            data bersih hasil pipeline
 ```
 

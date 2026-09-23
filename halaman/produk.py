@@ -68,7 +68,8 @@ with panel:
         st.caption(
             "29.519 listing produk Tokopedia dari Kaggle, dibersihkan menjadi 29.068 produk. "
             "Jumlah terjual adalah batas bawah, karena \"1rb+\" berarti minimal 1.000. "
-            "Kategori dibuat dari kata kunci nama produk."
+            "Kategori dibuat dari kata kunci nama produk. Dari 200 produk acak yang diperiksa manual, "
+            "sekitar 90% produk yang diberi kategori tergolong dengan benar."
         )
 
 # ------------------------------------------------------------------ Area utama

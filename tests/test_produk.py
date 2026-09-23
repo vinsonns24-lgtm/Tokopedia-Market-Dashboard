@@ -69,6 +69,33 @@ def test_tentukan_kategori(nama, harapan):
     assert tentukan_kategori(nama) == harapan
 
 
+# Kasus yang dulu salah golong. Contoh diambil dari nama produk asli di data.
+@pytest.mark.parametrize("nama, harapan", [
+    ("Mainan Anak Mobil Sedan Plastik Mobilan Murah Toys", "Ibu, Bayi & Mainan"),   # dulu Otomotif
+    ("Car Charger Mobil 60W PD USB-C USB-A Super Fast Charging", "Handphone"),        # dulu Otomotif
+    ("Tas Laptop Macbook Softcase Sleeve Nylon Waterproof", "Elektronik"),           # dulu Handphone
+    ("Alexandre Christie Wanita AC 2976 BH Original", "Fashion"),                    # dulu Elektronik
+    ("Toples Jar Toples Plastik PET 800ml", "Rumah Tangga"),                         # dulu Hewan Peliharaan
+    ("Helm Bogo Classic SNI Dewasa Helm Pet", "Otomotif"),                           # dulu Hewan Peliharaan
+    ("Car Charger Samsung USB-C 1 Port 25W RC-01", "Handphone"),                     # "RC-01" bukan mainan RC
+    ("AC SPLIT SHARP 1.5 PK AH-A12SAY R32", "Elektronik"),                           # AC sungguhan tetap Elektronik
+    ("Gelang casteli dua mainan emas tua kadar 16k", "Perhiasan"),                   # "mainan" di sini istilah perhiasan
+    ("Napolly Rak Sepatu Susun Muat 20 Pasang", "Rumah Tangga"),                     # dulu Fashion
+    ("Dunlopillo Sarung Bantal Pincore 65x45", "Rumah Tangga"),                      # dulu Fashion
+    ("Rexus RGC R60 Gaming Chair with Footrest", "Rumah Tangga"),                    # dulu Elektronik
+    ("ecentio tumbler Stainless Vacuum 900ml", "Rumah Tangga"),                      # dulu Elektronik
+    ("Xiaomi Redmi Watch 5 Active Smartwatch 2.0 LCD", "Elektronik"),                 # smartwatch bukan Fashion
+    ("JAM TANGAN LARI DIGITAL HITAM LED SPORTY", "Fashion"),                         # dulu Elektronik
+    ("New DEERMA CM800 VACUUM CLEANER UV-C ANTI DEBU TUNGAU KASUR", "Elektronik"),    # "kasur" tidak menang
+    ("Mainan Anak Tumbler Up Side Down Roly Poly", "Ibu, Bayi & Mainan"),            # "tumbler" tidak menang
+    ("makanan ikan terbaik/pelet ikan SAKURA", "Hewan Peliharaan"),                  # dulu Makanan & Minuman
+    ("Salsa Galaxy Eyeshadow Palette 3 Varian Warna", "Kesehatan & Kecantikan"),     # dulu Handphone
+    ("ORI Charger Laptop Lenovo Ideapad 100 110", "Elektronik"),                     # dulu Handphone
+])
+def test_kategori_kasus_ambigu(nama, harapan):
+    assert tentukan_kategori(nama) == harapan
+
+
 def test_kata_kunci_harus_kata_utuh():
     # "tas" tidak boleh cocok dengan "kualitas"
     assert tentukan_kategori("Kualitas Terbaik Nomor Satu") == "Lainnya"

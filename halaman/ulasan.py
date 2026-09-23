@@ -72,7 +72,7 @@ with panel:
 - Recall: dari semua ulasan negatif, berapa persen yang berhasil ditemukan.
 - Akurasi terlihat tinggi karena 97,6% ulasan memang positif. Model yang selalu menebak positif pun mendapat akurasi 97,6%, tetapi tidak pernah menemukan keluhan. Karena itu ukuran utamanya adalah F1 untuk kelas negatif.
 
-Keterbatasan: label berasal dari rating, dan sekitar 19% ulasan bintang 1-2 tidak berisi keluhan sama sekali, sehingga tidak bisa dikenali dari teksnya oleh model apa pun. Data latih berasal dari tahun 2019 dengan ulasan negatif yang didominasi kategori handphone. Proses lengkapnya ada di notebook `06_model_sentimen.ipynb`.
+Keterbatasan: label berasal dari rating, dan cukup banyak ulasan bintang 4-5 yang isinya keluhan, sehingga precision di atas kemungkinan lebih rendah dari kenyataan. Model juga sering melewatkan keluhan yang pendek atau memakai kata yang jarang. Data latih berasal dari tahun 2019 dengan ulasan negatif yang didominasi kategori handphone. Proses lengkapnya ada di notebook `06_model_sentimen.ipynb`.
 """
             )
 

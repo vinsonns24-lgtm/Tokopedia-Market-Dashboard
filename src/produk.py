@@ -65,8 +65,10 @@ def rapikan_lokasi(teks):
 
 KATEGORI = {
     "Hewan Peliharaan": [
-        "dog", "cat food", "cat litter", "kucing", "anjing", "pet", "whiskas", "royal canin",
+        "dog", "cat food", "cat litter", "kucing", "anjing", "whiskas", "royal canin",
         "akuarium", "aquarium", "aquascape", "ikan hias", "burung", "kandang", "barf",
+        # "pet" saja tidak dipakai, karena juga berarti plastik PET (toples, helm, hijab)
+        "pet food", "pet shop", "petshop", "pet cargo", "pet carrier", "pet bowl", "raw food",
     ],
     "Otomotif": [
         "motor", "mobil", "helm", "oli", "ban", "velg", "knalpot", "aki", "spion", "honda",
@@ -76,7 +78,7 @@ KATEGORI = {
     ],
     "Handphone": [
         "hp", "handphone", "smartphone", "iphone", "galaxy", "xiaomi", "redmi", "oppo", "vivo",
-        "realme", "infinix", "softcase", "case hp", "tempered glass", "anti gores", "charger",
+        "realme", "infinix", "poco", "case hp", "tempered glass", "anti gores", "charger",
         "kabel data", "powerbank", "power bank",
     ],
     "Elektronik": [
@@ -102,7 +104,7 @@ KATEGORI = {
     "Ibu, Bayi & Mainan": [
         "mainan", "boneka", "lego", "puzzle", "action figure", "bayi", "baby", "popok",
         "diapers", "stroller", "mpasi", "balita", "edukatif", "figure", "toys", "toy", "asi",
-        "bandai", "hot wheels", "rc",
+        "bandai", "hot wheels",
     ],
     "Fashion": [
         "baju", "kaos", "kemeja", "celana", "jaket", "hoodie", "sweater", "cardigan", "blouse",
@@ -113,6 +115,7 @@ KATEGORI = {
         "selendang", "sabuk", "ikat pinggang", "sweatshirt", "jeans", "legging", "kemko",
         "koko", "pashmina", "boots", "slop", "wedges", "tote", "kardigan", "rompi", "blazer",
         "scarf", "syal", "setelan", "daster", "underwear", "celana dalam", "bra", "singlet",
+        "peci", "songkok", "sorban", "ciput", "manset", "t-shirt", "tshirt", "bros",
     ],
     "Kesehatan & Kecantikan": [
         "serum", "skincare", "lipstik", "lip", "cushion", "bedak", "foundation", "maskara",
@@ -124,7 +127,8 @@ KATEGORI = {
         "blush", "spf", "fragrance", "mist", "scrub", "cica", "whitening", "minyak urut",
         "cajeput", "pembalut", "softex", "maternity", "cologne", "edp", "edt", "essence",
         "cleanser", "micellar", "eyeshadow", "concealer", "primer", "brow", "alis", "pelembab",
-        "skin", "lipcream", "lipstick", "soap", "retinol", "oksigen",
+        "skin", "lipcream", "lipstick", "soap", "retinol", "oksigen", "deodorant", "balsem",
+        "clay mask", "clay stick", "setting spray", "shampo",
     ],
     "Makanan & Minuman": [
         "kopi", "teh", "snack", "keripik", "kripik", "sambal", "saus", "kecap", "bumbu",
@@ -147,7 +151,7 @@ KATEGORI = {
         "kompresor", "pahat", "plafon", "pvc", "kran", "keran", "engsel", "tangga", "triplek",
         "lem", "staples", "genteng", "wallpaper", "cat", "gembok", "vinyl", "pagar", "gypsum",
         "wastafel", "closet", "shower", "kloset", "sealant", "amplas", "tandon", "kawat",
-        "selang",
+        "selang", "kunci pintu", "kunci l", "hex key", "door lock", "kunci ring", "decking",
     ],
     "Rumah Tangga": [
         "meja", "kursi", "lemari", "rak", "kasur", "bantal", "guling", "sprei", "seprai",
@@ -161,22 +165,63 @@ KATEGORI = {
         "cetakan", "rantang", "spatula", "saringan", "nampan", "baki", "kompor gas",
         "tudung saji", "sofa bed", "tempat tidur", "ranjang", "bed cover", "sarung bantal",
         "rice box", "keranjang", "lukisan", "kanvas", "kresek", "kantong plastik", "apron",
-        "furniture", "benang",
+        "furniture", "benang", "poster", "pajangan", "wall decor", "mimbar", "podium", "bonsai",
     ],
 }
 
-POLA_KATEGORI = {
-    kat: re.compile(r"\b(" + "|".join(re.escape(k) for k in kata) + r")\b")
-    for kat, kata in KATEGORI.items()
+# Frasa yang dicek lebih dulu, sebelum semua kategori di atas. Tanpa ini, urutan kategori
+# membuat frasa berikut salah golong, misalnya "mobil mobilan" masuk Otomotif karena kata
+# "mobil", "rak sepatu" masuk Fashion karena kata "sepatu", dan jam Alexandre Christie masuk
+# Elektronik karena kodenya diawali "AC". Urutan di sini juga berpengaruh: frasa mainan dicek
+# paling awal ("mainan anak tumbler" tetap mainan), lalu elektronik yang spesifik
+# ("vacuum cleaner kasur" tetap elektronik), baru rumah tangga.
+FRASA_KHUSUS = {
+    "Ibu, Bayi & Mainan": [
+        "mobil mobilan", "mobilan", "diecast", "hot wheels", "hotwheels", "mobil rc", "rc car",
+        "boneka", "mainan anak", "mainan edukasi",
+    ],
+    "Elektronik": [
+        "smartwatch", "smart watch", "jam tangan pintar", "vacuum cleaner", "penyedot debu",
+        "charger laptop", "adaptor laptop", "tas laptop", "mikrofon", "stand mic", "lampu meja",
+        "desk lamp",
+    ],
+    "Rumah Tangga": [
+        "rak sepatu", "sarung bantal", "gantungan baju", "kantong plastik", "kantong kresek",
+        "kresek", "kasur", "springbed", "spring bed", "tumbler", "termos", "botol minum",
+        "kursi gaming", "gaming chair", "parfum laundry", "pewangi pakaian", "meja belajar",
+        "meja makan",
+    ],
+    "Hewan Peliharaan": ["pelet ikan", "makanan ikan", "pakan ikan", "pakan burung"],
+    "Kesehatan & Kecantikan": [
+        "bibit parfum", "eyeshadow", "sarung tangan plastik", "disposable gloves",
+        "sarung tangan medis",
+    ],
+    "Handphone": ["car charger", "charger mobil", "charger hp", "holder hp", "phone holder"],
+    "Fashion": ["jam tangan", "alexandre christie", "alexander christie", "koper"],
+    "Pertukangan": ["lantai spc", "spc floor", "pintu aluminium", "balok kayu", "kusen"],
+    "Otomotif": ["karpet mobil", "tankpad"],
 }
 
 
+def _pola(kata):
+    return re.compile(r"\b(" + "|".join(re.escape(k) for k in kata) + r")\b")
+
+
+POLA_KHUSUS = {kat: _pola(kata) for kat, kata in FRASA_KHUSUS.items()}
+POLA_KATEGORI = {kat: _pola(kata) for kat, kata in KATEGORI.items()}
+
+
 def tentukan_kategori(nama):
-    """Kategori pertama yang kata kuncinya muncul di nama produk, atau 'Lainnya'."""
+    """Kategori dari nama produk.
+
+    Frasa khusus dicek lebih dulu. Kalau tidak ada yang cocok, dipakai kategori pertama
+    yang kata kuncinya muncul di nama produk. Kalau tetap tidak ada, hasilnya 'Lainnya'.
+    """
     nama = str(nama).lower()
-    for kat, pola in POLA_KATEGORI.items():
-        if pola.search(nama):
-            return kat
+    for pola_per_kategori in (POLA_KHUSUS, POLA_KATEGORI):
+        for kat, pola in pola_per_kategori.items():
+            if pola.search(nama):
+                return kat
     return "Lainnya"
 
 
