@@ -41,14 +41,26 @@ Hanya 2,4% ulasan yang negatif, jadi model yang selalu menebak "positif" sudah m
 | Langkah | F1 negatif (cross-validation) |
 |---|---|
 | Selalu menebak positif | 0 |
-| TF-IDF (1-2 gram) + Logistic Regression | 0,34 |
-| Dengan class_weight balanced | 0,50 |
-| Pengaturan terbaik dari GridSearchCV | 0,58 |
-| Ambang keputusan disetel dengan cross-validation | 0,63 |
+| TF-IDF (1-2 gram) + Logistic Regression | 0,36 |
+| Dengan class_weight balanced | 0,52 |
+| Pengaturan terbaik dari GridSearchCV | 0,59 |
+| Ambang keputusan disetel dengan cross-validation | 0,62 |
 
-Di data uji yang hanya dipakai sekali di akhir, model mendapat F1 0,62, precision 65%, dan recall 59%. Semua pengaturan dipilih dari cross-validation di data latih, bukan dari skor data uji.
+Data latih dan data uji dibagi per produk, jadi semua ulasan dari satu produk hanya ada di salah satu sisi. Cara ini menguji kemampuan model menilai ulasan dari produk yang belum pernah dilihatnya. Di data uji yang hanya dipakai sekali di akhir, model mendapat F1 0,57 (rentang bootstrap 95%: 0,50 sampai 0,63), precision 63%, dan recall 52%. Semua pengaturan dipilih dari cross-validation di data latih, bukan dari skor data uji.
 
-Dua model tambahan dicoba di notebook 08 dan hasilnya dilaporkan apa adanya. Menebak kategori dari teks ulasan hanya mencapai akurasi 41% (patokan 39%), karena kebanyakan ulasan membahas pengiriman dan penjual, bukan produknya. Menebak bintang 1 sampai 5 tidak bisa unggul di semua ukuran sekaligus, karena ulasan bintang 4 dan 5 hampir tidak bisa dibedakan dari teksnya. Kedua hasil ini menjadi alasan model sentimen memakai dua kelas saja.
+### Kenapa skornya tidak lebih tinggi
+
+Notebook 06 bagian 10 menguji beberapa kemungkinan penyebab:
+
+| Kemungkinan | Hasil |
+|---|---|
+| Pengaturan model kurang tepat | `C` sampai 1000, fitur potongan huruf, dan gabungan fitur kata dan huruf tidak lebih baik dari model akhir |
+| Data kurang | Skor naik dari 0,53 (184 ulasan negatif) ke 0,63 (738), tetapi kenaikannya terus mengecil |
+| Label tidak cocok dengan isi ulasan | Penyebab terbesar. Sekitar 19% ulasan bintang 1-2 tidak berisi keluhan sama sekali ("Mantap", "Thanks"), dan banyak ulasan bintang 4-5 berisi keluhan jelas ("barang yang dikirim rusak, tidak bisa dipakai") |
+
+Label dibuat dari bintang, sehingga batas atas recall model berbasis teks sekitar 80%, apa pun modelnya. Langkah berikutnya yang paling menjanjikan adalah melabeli ulang sebagian ulasan berdasarkan isinya, bukan mengganti model.
+
+Dua model tambahan dicoba di notebook 08 dan hasilnya dilaporkan apa adanya. Menebak kategori dari teks ulasan hanya mencapai akurasi 41% (patokan 39%), karena kebanyakan ulasan membahas pengiriman dan penjual, bukan produknya. Model yang sama mencapai akurasi 97% kalau diberi nama produk, jadi batasnya ada di informasi dalam teks ulasan, bukan di model. Menebak bintang 1 sampai 5 tidak bisa unggul di semua ukuran sekaligus, karena ulasan bintang 4 dan 5 hampir tidak bisa dibedakan dari teksnya. Teks yang sama persis, seperti "terimakasih" (391 ulasan), diberi bintang 5 oleh 71% pembeli dan bintang 4 oleh 26% pembeli. Kedua hasil ini menjadi alasan model sentimen memakai dua kelas saja.
 
 Sistem rekomendasi tidak dibuat, karena dataset tidak memuat data pembeli. Sebagai gantinya, notebook 07 membuat peringkat produk yang paling banyak dikeluhkan dan paling konsisten dipuji.
 
@@ -68,7 +80,7 @@ Sistem rekomendasi tidak dibuat, karena dataset tidak memuat data pembeli. Sebag
 | [03 Analisis Produk](Notebooks/03_analisis_produk.ipynb) | Harga, wilayah, diskon, rating, dan kata kunci |
 | [04 Eksplorasi Ulasan](Notebooks/04_eksplorasi_ulasan.ipynb) | Ketidakseimbangan rating, bahasa informal, label noise |
 | [05 Data Prep Ulasan](Notebooks/05_data_prep_ulasan.ipynb) | Pembersihan teks dan pembuatan label sentimen |
-| [06 Model Sentimen](Notebooks/06_model_sentimen.ipynb) | Dari model patokan sampai penyetelan ambang, evaluasi, dan analisis kesalahan |
+| [06 Model Sentimen](Notebooks/06_model_sentimen.ipynb) | Dari model patokan sampai penyetelan ambang, evaluasi, analisis kesalahan, dan penyebab skor mentok |
 | [07 Analisis Ulasan](Notebooks/07_analisis_ulasan.ipynb) | Tema keluhan per kategori dan peringkat produk |
 | [08 Model Kategori dan Rating](Notebooks/08_model_kategori_rating.ipynb) | Dua model tambahan dan alasan hasilnya lemah |
 

@@ -2,11 +2,11 @@
   "model": "TF-IDF (1-2 gram) + Logistic Regression",
   "C": 30,
   "class_weight": null,
-  "ambang_peluang_negatif": 0.2323,
-  "data_latih": 30868,
-  "data_uji": 7717,
-  "uji_precision_negatif": 0.6527,
-  "uji_recall_negatif": 0.5924,
-  "uji_f1_negatif": 0.6211,
-  "uji_akurasi": 0.9828
+  "ambang_peluang_negatif": 0.303,
+  "data_latih": 30869,
+  "data_uji": 7716,
+  "uji_precision_negatif": 0.6291,
+  "uji_recall_negatif": 0.5163,
+  "uji_f1_negatif": 0.5672,
+  "uji_akurasi": 0.9812
 }
