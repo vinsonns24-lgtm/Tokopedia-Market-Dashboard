@@ -102,6 +102,13 @@ Sistem rekomendasi tidak dibuat, karena dataset tidak memuat data pembeli. Sebag
 - Ulasan berasal dari tahun 2019 dan dari sekitar 160 toko, dengan ulasan negatif yang didominasi kategori handphone.
 - Semua data adalah potret satu waktu, sehingga hasilnya menunjukkan hubungan, bukan sebab-akibat.
 
+## Pelajaran dari proyek ini
+
+- Cara membagi data menentukan seberapa jujur skornya. Membagi per produk membuat model dinilai dengan ulasan dari produk yang belum pernah dilihatnya, sama seperti saat dipakai di dashboard.
+- Sebelum mengganti model, periksa labelnya. Pemeriksaan manual menunjukkan 62% alarm palsu ternyata keluhan berbintang 4-5, sehingga precision yang terukur (68%) jauh di bawah perkiraan sebenarnya (88%). Batas skor bisa datang dari label, bukan dari model.
+- Aturan berbasis kata kunci perlu diukur, bukan hanya dilihat contohnya. Akurasi kategori dihitung dari 200 produk acak yang tidak dipakai saat menyusun aturan, dan naik dari 84% menjadi 90% setelah aturan diperbaiki.
+- Kode data prep yang hanya ditulis sekali di folder src, lalu dipakai notebook, pipeline, dan dashboard dan diuji dengan pytest, mencegah angka yang berbeda di tempat yang berbeda.
+
 ## Struktur proyek
 
 ```
