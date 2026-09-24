@@ -27,7 +27,7 @@ Dari data ulasan:
 
 ## Temuan utama
 
-- Rating 5.0 lebih sering berarti produk baru punya sedikit pembeli, bukan produk terbaik. Median jumlah terjual produk ber-rating 5.0 hanya 16, sedangkan produk ber-rating 4.9 mencapai 500.
+- Rating 5,0 lebih sering berarti produk baru punya sedikit pembeli, bukan produk terbaik. Median jumlah terjual produk ber-rating 5,0 hanya 16, sedangkan produk ber-rating 4,9 mencapai 500.
 - Produk berdiskon lebih laris (median terjual 100 dibanding 26), tetapi diskon besar tidak menjamin laris. Dua pertiga produk dengan diskon di atas 50% tetap terjual di bawah 1.000.
 - Kata "premium" di nama produk justru berkaitan dengan harga di bawah median kategorinya (0,82 kali), sedangkan "original" dan "official" berkaitan dengan harga 1,35 sampai 1,55 kali median kategori.
 - DKI Jakarta menyumbang 46% toko dan 51% total terjual. Bersama Jawa Barat dan Banten, porsinya sekitar 90%.
