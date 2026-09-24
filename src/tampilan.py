@@ -87,9 +87,13 @@ def kartu_kpi(label, nilai, catatan="", sorot=False):
     )
 
 
+# Format angka gaya Indonesia untuk grafik: koma untuk desimal, titik untuk ribuan
+LOCALE_ANGKA = {"decimal": ",", "thousands": ".", "grouping": [3], "currency": ["Rp", ""]}
+
+
 def latar_putih(grafik):
-    """Latar grafik Altair dibuat putih supaya menyatu dengan kartu."""
-    return grafik.configure(background="#ffffff")
+    """Latar grafik Altair dibuat putih supaya menyatu dengan kartu, dan angkanya memakai format Indonesia."""
+    return grafik.configure(background="#ffffff", locale={"number": LOCALE_ANGKA})
 
 
 def batang_horizontal(data, kolom_label, kolom_nilai, judul_nilai, format_nilai=",.0f"):
@@ -116,3 +120,13 @@ def rupiah(x):
 
 def angka(x):
     return f"{x:,.0f}".replace(",", ".")
+
+
+def desimal(x, digit=2):
+    """Bilangan desimal gaya Indonesia, misalnya 0.567 menjadi '0,57'."""
+    return f"{x:.{digit}f}".replace(".", ",")
+
+
+def persen(x, digit=0):
+    """Proporsi (0 sampai 1) sebagai persen gaya Indonesia, misalnya 0.981 menjadi '98,1%'."""
+    return desimal(x * 100, digit) + "%"

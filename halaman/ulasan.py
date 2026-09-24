@@ -5,7 +5,7 @@ import joblib
 import pandas as pd
 import streamlit as st
 
-from src.tampilan import HIJAU, ORANYE, angka, kartu_kpi, latar_putih
+from src.tampilan import HIJAU, ORANYE, angka, desimal, kartu_kpi, latar_putih, persen
 from src.tema import TEMA, tandai_tema
 from src.teks import bersihkan_teks
 
@@ -60,11 +60,11 @@ with panel:
         st.subheader("Kinerja model sentimen")
         st.caption(f"Diuji dengan {angka(metrik['data_uji'])} ulasan dari produk yang tidak pernah dilihat saat latihan.")
         k1, k2 = st.columns(2)
-        k1.metric("Precision", f"{metrik['uji_precision_negatif']:.0%}")
-        k2.metric("Recall", f"{metrik['uji_recall_negatif']:.0%}")
+        k1.metric("Precision", persen(metrik["uji_precision_negatif"]))
+        k2.metric("Recall", persen(metrik["uji_recall_negatif"]))
         k3, k4 = st.columns(2)
-        k3.metric("F1 negatif", f"{metrik['uji_f1_negatif']:.2f}")
-        k4.metric("Akurasi", f"{metrik['uji_akurasi']:.1%}")
+        k3.metric("F1 negatif", desimal(metrik["uji_f1_negatif"]))
+        k4.metric("Akurasi", persen(metrik["uji_akurasi"], 1))
         with st.expander("Cara membaca angka ini"):
             st.markdown(
                 """
@@ -83,7 +83,7 @@ positif = data[data["label"] == "positif"]
 with utama:
     kolom1, kolom2, kolom3, kolom4 = st.columns(4)
     with kolom1:
-        kartu_kpi("Ulasan negatif", f"{len(negatif) / len(data):.1%}", f"{angka(len(negatif))} ulasan bintang 1-2", sorot=True)
+        kartu_kpi("Ulasan negatif", persen(len(negatif) / len(data), 1), f"{angka(len(negatif))} ulasan bintang 1-2", sorot=True)
     with kolom2:
         kartu_kpi("Jumlah ulasan", angka(len(data)), "setelah dibersihkan")
     with kolom3:
@@ -143,7 +143,7 @@ with utama:
                 st.info("Tidak ada produk dengan minimal 20 ulasan untuk filter ini.")
             else:
                 st.dataframe(
-                    per_produk.head(10).reset_index(drop=True).style.format({"persen_negatif": "{:.1f}%"}),
+                    per_produk.head(10).reset_index(drop=True).style.format({"persen_negatif": lambda v: persen(v / 100, 1)}),
                     width="stretch",
                 )
                 st.caption("Hanya produk dengan minimal 20 ulasan, supaya persentasenya tidak berasal dari segelintir ulasan.")
@@ -267,12 +267,12 @@ with utama:
                     with kiri:
                         kartu_kpi("Tebakan model", tebakan.capitalize(), "positif atau negatif", sorot=tebakan == "positif")
                     with kanan:
-                        kartu_kpi("Peluang negatif", f"{peluang_negatif:.0%}",
-                                  f"ditebak negatif mulai {metrik['ambang_peluang_negatif']:.0%}")
+                        kartu_kpi("Peluang negatif", persen(peluang_negatif),
+                                  f"ditebak negatif mulai {persen(metrik['ambang_peluang_negatif'])}")
                     st.write("")
                     st.progress(float(peluang_negatif))
                     st.caption(
-                        f"Teks yang dibaca model: \"{teks_bersih}\". Ambang {metrik['ambang_peluang_negatif']:.0%} "
+                        f"Teks yang dibaca model: \"{teks_bersih}\". Ambang {persen(metrik['ambang_peluang_negatif'])} "
                         "sengaja rendah karena ulasan negatif sangat jarang di data latih."
                     )
 

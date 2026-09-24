@@ -2,7 +2,7 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 
-from src.tampilan import ABU, HIJAU, ORANYE, angka, batang_horizontal, kartu_kpi, latar_putih, rupiah
+from src.tampilan import ABU, HIJAU, ORANYE, angka, batang_horizontal, kartu_kpi, latar_putih, persen, rupiah
 
 KATA_KUNCI = {
     "premium": r"\bpremium\b",
@@ -86,7 +86,7 @@ with utama:
     with kolom3:
         kartu_kpi("Median harga", rupiah(data["harga"].median()), "harga produk di tengah")
     with kolom4:
-        kartu_kpi("Produk berdiskon", f"{(data['diskon'] > 0).mean():.0%}", "diskon di atas 0%")
+        kartu_kpi("Produk berdiskon", persen((data["diskon"] > 0).mean()), "diskon di atas 0%")
 
     st.write("")
 
@@ -163,7 +163,7 @@ with utama:
                         "jumlah_produk": angka,
                         "total_terjual": angka,
                         "median_terjual": angka,
-                        "porsi_terjual": "{:.1%}",
+                        "porsi_terjual": lambda v: persen(v, 1),
                     }),
                     width="stretch",
                 )
