@@ -104,7 +104,7 @@ KATEGORI = {
     "Ibu, Bayi & Mainan": [
         "mainan", "boneka", "lego", "puzzle", "action figure", "bayi", "baby", "popok",
         "diapers", "stroller", "mpasi", "balita", "edukatif", "figure", "toys", "toy", "asi",
-        "bandai", "hot wheels",
+        "bandai",
     ],
     "Fashion": [
         "baju", "kaos", "kemeja", "celana", "jaket", "hoodie", "sweater", "cardigan", "blouse",
@@ -159,11 +159,11 @@ KATEGORI = {
         "mangkok", "mangkuk", "sendok", "panci", "wajan", "kompor", "tumbler", "botol",
         "toples", "ember", "sapu", "pel", "jam dinding", "cermin", "dekorasi", "hiasan", "vas",
         "tanaman", "pot", "sofa", "pewangi", "deterjen", "pembersih", "gantungan", "hanger",
-        "sajadah", "tikar", "tisu", "tissue", "payung", "dapur", "kulkas", "bingkai", "lilin",
+        "sajadah", "tikar", "tisu", "tissue", "payung", "dapur", "bingkai", "lilin",
         "sikat", "kain pel", "jemuran", "pisau", "talenan", "teko", "termos", "wadah", "kotak",
         "celengan", "korek", "benih", "bibit", "pupuk", "tanah", "lap", "bak", "loyang",
-        "cetakan", "rantang", "spatula", "saringan", "nampan", "baki", "kompor gas",
-        "tudung saji", "sofa bed", "tempat tidur", "ranjang", "bed cover", "sarung bantal",
+        "cetakan", "rantang", "spatula", "saringan", "nampan", "baki",
+        "tudung saji", "tempat tidur", "ranjang", "bed cover",
         "rice box", "keranjang", "lukisan", "kanvas", "kresek", "kantong plastik", "apron",
         "furniture", "benang", "poster", "pajangan", "wall decor", "mimbar", "podium", "bonsai",
     ],
@@ -172,7 +172,9 @@ KATEGORI = {
 # Frasa yang dicek lebih dulu, sebelum semua kategori di atas. Tanpa ini, urutan kategori
 # membuat frasa berikut salah golong, misalnya "mobil mobilan" masuk Otomotif karena kata
 # "mobil", "rak sepatu" masuk Fashion karena kata "sepatu", dan jam Alexandre Christie masuk
-# Elektronik karena kodenya diawali "AC". Urutan di sini juga berpengaruh: frasa mainan dicek
+# Elektronik karena kodenya diawali "AC". "monitor", "printer", dan "laptop hp" ada di sini karena
+# "hp" dan "xiaomi" adalah kata kunci Handphone, yang dicek sebelum Elektronik ("Monitor Xiaomi",
+# "Printer HP", dan "Adaptor Charger Laptop HP" tadinya masuk Handphone). Urutan di sini juga berpengaruh: frasa mainan dicek
 # paling awal ("mainan anak tumbler" tetap mainan), lalu elektronik yang spesifik
 # ("vacuum cleaner kasur" tetap elektronik), baru rumah tangga.
 FRASA_KHUSUS = {
@@ -183,7 +185,7 @@ FRASA_KHUSUS = {
     "Elektronik": [
         "smartwatch", "smart watch", "jam tangan pintar", "vacuum cleaner", "penyedot debu",
         "charger laptop", "adaptor laptop", "tas laptop", "mikrofon", "stand mic", "lampu meja",
-        "desk lamp",
+        "desk lamp", "monitor", "printer", "laptop hp", "casing laptop",
     ],
     "Rumah Tangga": [
         "rak sepatu", "sarung bantal", "gantungan baju", "kantong plastik", "kantong kresek",

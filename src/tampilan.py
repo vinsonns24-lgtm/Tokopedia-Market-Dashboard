@@ -92,8 +92,19 @@ LOCALE_ANGKA = {"decimal": ",", "thousands": ".", "grouping": [3], "currency": [
 
 
 def latar_putih(grafik):
-    """Latar grafik Altair dibuat putih supaya menyatu dengan kartu, dan angkanya memakai format Indonesia."""
-    return grafik.configure(background="#ffffff", locale={"number": LOCALE_ANGKA})
+    """Latar grafik Altair dibuat putih supaya menyatu dengan kartu, dan angkanya memakai format Indonesia.
+
+    Vega mengukur lebar label sebelum font Inter selesai dimuat, sehingga label yang tampil lebih
+    lebar dari ruang yang disiapkan: label kategori terpotong di kiri dan angka sumbu X bertumpuk.
+    Karena itu ditambahkan ruang di kiri, jumlah angka di sumbu dibatasi, dan batas panjang label
+    dilonggarkan.
+    """
+    return (
+        grafik.properties(padding={"left": 18, "right": 8, "top": 5, "bottom": 5})
+        .configure(background="#ffffff", locale={"number": LOCALE_ANGKA})
+        .configure_axisX(tickCount=6)
+        .configure_axisY(labelLimit=220)
+    )
 
 
 def batang_horizontal(data, kolom_label, kolom_nilai, judul_nilai, format_nilai=",.0f"):

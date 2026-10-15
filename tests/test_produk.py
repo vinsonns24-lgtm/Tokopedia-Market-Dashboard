@@ -90,6 +90,10 @@ def test_tentukan_kategori(nama, harapan):
     ("Mainan Anak Tumbler Up Side Down Roly Poly", "Ibu, Bayi & Mainan"),            # "tumbler" tidak menang
     ("makanan ikan terbaik/pelet ikan SAKURA", "Hewan Peliharaan"),                  # dulu Makanan & Minuman
     ("Salsa Galaxy Eyeshadow Palette 3 Varian Warna", "Kesehatan & Kecantikan"),     # dulu Handphone
+    ("Monitor LED Xiaomi A24i 24\" IPS 1080p FHD 100Hz HDMI DP", "Elektronik"),     # dulu Handphone
+    ("Printer HP LaserJet P1102 Termurah Garansi 1 Bulan", "Elektronik"),            # dulu Handphone
+    ("Adaptor Charger Original Laptop HP 19V 1.58 A 30W", "Elektronik"),             # dulu Handphone
+    ("TUTTOO Koper Kabin A115 Ukuran 20 inci Slot Laptop Kabin", "Fashion"),         # "laptop" saja tidak menang
     ("ORI Charger Laptop Lenovo Ideapad 100 110", "Elektronik"),                     # dulu Handphone
 ])
 def test_kategori_kasus_ambigu(nama, harapan):

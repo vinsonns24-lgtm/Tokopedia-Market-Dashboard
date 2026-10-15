@@ -115,9 +115,11 @@ with utama:
                     q3=lambda s: s.quantile(0.75),
                 )
                 .sort_values("median", ascending=False)
+                .rename_axis("Kategori")
+                .rename(columns={"jumlah_produk": "Jumlah produk", "q1": "Q1", "median": "Median", "q3": "Q3"})
             )
             st.dataframe(
-                rentang.style.format({"jumlah_produk": angka, "q1": rupiah, "median": rupiah, "q3": rupiah}),
+                rentang.style.format({"Jumlah produk": angka, "Q1": rupiah, "Median": rupiah, "Q3": rupiah}),
                 width="stretch",
             )
 
@@ -125,7 +127,7 @@ with utama:
         with tab_wilayah:
             data_wilayah = data.dropna(subset=["kota"])
             st.caption(
-                f"{angka(len(data) - len(data_wilayah))} produk tanpa informasi lokasi "
+                f"{angka(data['provinsi'].isna().sum())} produk tanpa informasi lokasi "
                 "(misalnya berlokasi \"Indonesia\") tidak diikutkan."
             )
 
@@ -157,13 +159,20 @@ with utama:
                     .sort_values("jumlah_toko", ascending=False)
                 )
                 provinsi["porsi_terjual"] = provinsi["total_terjual"] / provinsi["total_terjual"].sum()
+                provinsi = provinsi.rename_axis("Provinsi").rename(columns={
+                    "jumlah_toko": "Jumlah toko",
+                    "jumlah_produk": "Jumlah produk",
+                    "total_terjual": "Total terjual",
+                    "median_terjual": "Median terjual",
+                    "porsi_terjual": "Porsi terjual",
+                })
                 st.dataframe(
                     provinsi.style.format({
-                        "jumlah_toko": angka,
-                        "jumlah_produk": angka,
-                        "total_terjual": angka,
-                        "median_terjual": angka,
-                        "porsi_terjual": lambda v: persen(v, 1),
+                        "Jumlah toko": angka,
+                        "Jumlah produk": angka,
+                        "Total terjual": angka,
+                        "Median terjual": angka,
+                        "Porsi terjual": lambda v: persen(v, 1),
                     }),
                     width="stretch",
                 )
@@ -217,7 +226,7 @@ with utama:
                 kelompok_rating = pd.cut(
                     data["rating"],
                     bins=[0, 4.5, 4.7, 4.8, 4.9, 5.0],
-                    labels=["4.5 ke bawah", "4.6-4.7", "4.8", "4.9", "5.0"],
+                    labels=["4,5 ke bawah", "4,6-4,7", "4,8", "4,9", "5,0"],
                 )
                 per_rating = (
                     data.groupby(kelompok_rating, observed=True)
@@ -234,7 +243,7 @@ with utama:
                     .encode(
                         x=alt.X("rating:N", title="Rating", sort=None, axis=alt.Axis(labelAngle=0)),
                         y=alt.Y("median_terjual:Q", title="Median terjual"),
-                        color=alt.condition(alt.datum.rating == "5.0", alt.value(ORANYE), alt.value(HIJAU)),
+                        color=alt.condition(alt.datum.rating == "5,0", alt.value(ORANYE), alt.value(HIJAU)),
                         tooltip=[
                             alt.Tooltip("rating:N", title="Rating"),
                             alt.Tooltip("median_terjual:Q", title="Median terjual", format=","),
@@ -245,7 +254,7 @@ with utama:
                 )
                 st.altair_chart(latar_putih(grafik_rating), width="stretch")
                 st.caption(
-                    "Rating 5.0 umumnya berasal dari produk yang baru punya sedikit pembeli, "
+                    "Rating 5,0 umumnya berasal dari produk yang baru punya sedikit pembeli, "
                     "sehingga median terjualnya justru rendah. Arahkan kursor ke batang untuk melihat median ulasan."
                 )
 

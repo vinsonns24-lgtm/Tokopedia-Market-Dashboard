@@ -6,7 +6,7 @@ Satu ulasan bisa masuk lebih dari satu tema.
 
 TEMA = {
     "Pengiriman": ["kirim", "dikirim", "pengiriman", "kurir", "ekspedisi", "jne", "jnt", "sicepat",
-                   "ongkir", "datang", "sampai", "nyampe", "lama", "telat", "terlambat", "cepat"],
+                   "ongkir", "datang", "sampai", "lama", "telat", "terlambat", "cepat"],
     "Kemasan": ["packing", "bubble", "wrap", "kardus", "dus", "bungkus", "kemasan", "dikemas",
                 "packaging", "penyok"],
     "Kualitas produk": ["kualitas", "awet", "kuat", "rusak", "jelek", "mati", "pecah", "cacat",

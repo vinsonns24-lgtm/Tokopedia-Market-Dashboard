@@ -16,6 +16,8 @@ MIN_NEGATIF = 30
 def muat_ulasan():
     df = pd.read_csv("Dataset/processed/ulasan_bersih.csv")
     df["teks_bersih"] = df["teks_bersih"].fillna("")
+    # Kategori di data ulasan ditulis huruf kecil ("handphone"), disamakan dengan halaman Pasar Produk
+    df["kategori"] = df["kategori"].str.capitalize()
     return pd.concat([df, tandai_tema(df["teks_bersih"])], axis=1)
 
 
@@ -142,9 +144,16 @@ with utama:
             if per_produk.empty:
                 st.info("Tidak ada produk dengan minimal 20 ulasan untuk filter ini.")
             else:
+                tabel_produk = per_produk.head(10).rename(columns={
+                    "nama_produk": "Nama produk",
+                    "kategori": "Kategori",
+                    "jumlah_ulasan": "Jumlah ulasan",
+                    "persen_negatif": "Ulasan negatif",
+                })
                 st.dataframe(
-                    per_produk.head(10).reset_index(drop=True).style.format({"persen_negatif": lambda v: persen(v / 100, 1)}),
+                    tabel_produk.style.format({"Ulasan negatif": lambda v: persen(v / 100, 1)}),
                     width="stretch",
+                    hide_index=True,
                 )
                 st.caption("Hanya produk dengan minimal 20 ulasan, supaya persentasenya tidak berasal dari segelintir ulasan.")
 
@@ -187,16 +196,18 @@ with utama:
                 st.altair_chart(latar_putih(grafik_tema), width="stretch")
                 st.caption(
                     "Tema diurutkan dari yang paling khas untuk ulasan negatif. Kalau batang oranye lebih panjang "
-                    "dari batang hijau, tema itu cenderung menjadi sumber keluhan. Kualitas produk adalah sumber keluhan "
-                    "terbesar, sedangkan pengiriman dan pelayanan penjual lebih sering dipuji."
+                    "dari batang hijau, tema itu cenderung menjadi sumber keluhan. Di seluruh data, pengiriman dan kesesuaian pesanan paling "
+                    "sering disebut, tetapi hampir sama seringnya di ulasan positif. Kualitas produk paling khas untuk "
+                    "keluhan: 1,8 kali lebih sering di ulasan negatif. Pelayanan penjual dan kemasan lebih sering dipuji."
                 )
 
                 st.subheader("Tema yang disebut dalam ulasan negatif, per kategori")
                 keluhan = negatif.groupby("kategori")[daftar_tema].mean() * 100
                 keluhan_panjang = keluhan.reset_index().melt(id_vars="kategori", var_name="tema", value_name="persen")
-                dasar = alt.Chart(keluhan_panjang).encode(
-                    x=alt.X("tema:N", title=None, sort=daftar_tema, axis=alt.Axis(labelAngle=-20)),
-                    y=alt.Y("kategori:N", title=None),
+                dasar = alt.Chart(keluhan_panjang, height=alt.Step(34)).encode(
+                    # Tema di sumbu Y supaya nama tema yang panjang terbaca utuh tanpa dimiringkan
+                    x=alt.X("kategori:N", title=None, axis=alt.Axis(labelAngle=0, orient="top")),
+                    y=alt.Y("tema:N", title=None, sort=daftar_tema),
                 )
                 kotak = dasar.mark_rect(cornerRadius=4).encode(
                     color=alt.Color(
@@ -228,7 +239,9 @@ with utama:
                     st.info("Tidak ada ulasan negatif dengan tema ini untuk filter yang dipilih.")
                 else:
                     st.dataframe(
-                        contoh[["kategori", "rating", "teks"]].sample(min(10, len(contoh)), random_state=1),
+                        contoh[["kategori", "rating", "teks"]]
+                        .sample(min(10, len(contoh)), random_state=1)
+                        .rename(columns={"kategori": "Kategori", "rating": "Rating", "teks": "Teks ulasan"}),
                         width="stretch",
                         hide_index=True,
                     )

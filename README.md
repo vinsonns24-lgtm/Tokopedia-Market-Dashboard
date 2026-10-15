@@ -30,8 +30,8 @@ Dari data ulasan:
 - Rating 5,0 lebih sering berarti produk baru punya sedikit pembeli, bukan produk terbaik. Median jumlah terjual produk ber-rating 5,0 hanya 16, sedangkan produk ber-rating 4,9 mencapai 500.
 - Produk berdiskon lebih laris (median terjual 100 dibanding 26), tetapi diskon besar tidak menjamin laris. Dua pertiga produk dengan diskon di atas 50% tetap terjual di bawah 1.000.
 - Kata "premium" di nama produk justru berkaitan dengan harga di bawah median kategorinya (0,82 kali), sedangkan "original" dan "official" berkaitan dengan harga 1,35 sampai 1,55 kali median kategori.
-- DKI Jakarta menyumbang 46% toko dan 51% total terjual. Bersama Jawa Barat dan Banten, porsinya sekitar 90%.
-- Kualitas produk adalah sumber keluhan terbesar (disebut di 28% ulasan negatif, dibanding 16% ulasan positif). Pengiriman dan pelayanan penjual justru lebih sering dipuji daripada dikeluhkan.
+- DKI Jakarta menyumbang 46% toko dan 51% total terjual. Bersama Jawa Barat dan Banten, porsinya 79% toko dan 89% total terjual.
+- Kualitas produk adalah tema yang paling khas untuk keluhan: disebut di 28% ulasan negatif, dibanding 16% ulasan positif (1,8 kali). Pengiriman dan kesesuaian pesanan lebih sering disebut di ulasan negatif (sekitar 34%), tetapi hampir sama seringnya di ulasan positif, sehingga tidak membedakan keluhan dari pujian. Pengiriman dan pelayanan penjual justru lebih sering dipuji daripada dikeluhkan.
 - Di kategori handphone, 38% keluhan berasal dari hanya dua produk.
 
 ## Model sentimen
@@ -56,7 +56,7 @@ Notebook 06 bagian 10 menguji beberapa kemungkinan penyebab:
 |---|---|
 | Pengaturan model kurang tepat | `C` sampai 1000, fitur potongan huruf, dan gabungan fitur kata dan huruf tidak lebih baik dari model akhir |
 | Data kurang | Skor naik dari 0,53 (184 ulasan negatif) ke 0,63 (738), tetapi kenaikannya terus mengecil |
-| Label tidak cocok dengan isi ulasan | Diperiksa manual. Di ulasan bintang 1-2 hanya sekitar 4% yang tidak berisi keluhan. Tetapi dari 60 sampel alarm palsu, 62% ternyata keluhan berbintang 4-5 ("kainnya kurang kuat, baru dipakai sekali sobek"). Precision yang terukur 68%, sedangkan perkiraan precision sebenarnya sekitar 88% |
+| Label tidak cocok dengan isi ulasan | Diperiksa manual. Di ulasan bintang 1-2, setidaknya sekitar 4% tidak berisi keluhan (dari 138 ulasan yang diperiksa). Tetapi dari 60 sampel alarm palsu, 62% ternyata keluhan berbintang 4-5 ("kainnya kurang kuat, baru dipakai sekali sobek"). Precision yang terukur di cross-validation 68%, sedangkan perkiraan precision sebenarnya sekitar 88% |
 | Keterbatasan model berbasis kata | Dari 138 ulasan negatif yang paling yakin dilewatkan model, 77% adalah keluhan sungguhan, umumnya pendek atau memakai kata keluhan yang jarang ("Pengiriman lama", "Deker nya kekecilan") |
 
 Jadi skor tertahan oleh dua hal: label yang keliru menekan precision yang terukur, dan keterbatasan model berbasis kata menekan recall. Langkah berikutnya yang paling menjanjikan adalah membuat data uji berlabel manual, lalu menangani negasi dan keluhan pendek, misalnya dengan model seperti IndoBERT. Hasil pemeriksaan manual ada di `Dataset/manual/cek_label_sentimen.csv`.
@@ -90,7 +90,7 @@ Sistem rekomendasi tidak dibuat, karena dataset tidak memuat data pembeli. Sebag
 - Jumlah terjual dan jumlah ulasan tersimpan sebagai teks dengan belasan format, misalnya "1rb+ terjual", "4.95rb+", dan "1jt+". Arti tanda titik juga tidak konsisten: "1.000 ulasan" memakai titik sebagai pemisah ribuan, sedangkan "1.2rb ulasan" memakai titik sebagai desimal.
 - Sekitar 34% URL produk ternyata hanya link halaman toko, sehingga URL tidak bisa dipakai untuk mendeteksi duplikat.
 - Lokasi toko ditulis dalam 322 variasi, termasuk 2.834 baris yang hanya berlokasi "Indonesia". Lokasi dipetakan ke kota dan provinsi dengan tabel referensi buatan sendiri.
-- Dataset produk tidak punya kolom kategori, jadi kategori dibuat dari kata kunci nama produk dengan pencocokan kata utuh. Kata yang ambigu ditangani dengan frasa khusus yang dicek lebih dulu, misalnya "mobil mobilan" (mainan, bukan otomotif) dan "rak sepatu" (rumah tangga, bukan fashion). Akurasinya diukur dengan memeriksa 200 produk acak secara manual: sekitar 90% produk yang diberi kategori tergolong dengan benar (kisaran 95%: 86% sampai 94%), naik dari 84% pada versi awal.
+- Dataset produk tidak punya kolom kategori, jadi kategori dibuat dari kata kunci nama produk dengan pencocokan kata utuh. Kata yang ambigu ditangani dengan frasa khusus yang dicek lebih dulu, misalnya "mobil mobilan" (mainan, bukan otomotif) dan "rak sepatu" (rumah tangga, bukan fashion). Akurasinya diukur dengan memeriksa 200 produk acak secara manual: sekitar 90% produk yang diberi kategori tergolong dengan benar (kisaran 95%: 86% sampai 95%), naik dari 84% pada versi awal.
 - Teks ulasan berisi kode HTML, huruf berulang ("baguuus"), dan singkatan. Kata "tidak" saja muncul dalam 10 ejaan berbeda.
 - Kedua dataset berasal dari periode dan sumber berbeda, sehingga tidak bisa digabung per produk. Keduanya hanya disandingkan di level kategori.
 
@@ -98,14 +98,14 @@ Sistem rekomendasi tidak dibuat, karena dataset tidak memuat data pembeli. Sebag
 
 - Jumlah terjual adalah batas bawah, karena "1rb+" berarti minimal 1.000.
 - Kategori berbasis kata kunci tidak sempurna. Sekitar 1 dari 10 produk yang diberi kategori masih salah golong, dan 8% produk masuk "Lainnya".
-- Label sentimen berasal dari rating. Sebagian kecil ulasan bintang 1 dan 2 (sekitar 4%) isinya justru pujian, dan sebaliknya cukup banyak ulasan bintang 4 dan 5 berisi keluhan.
+- Label sentimen berasal dari rating. Sebagian kecil ulasan bintang 1 dan 2 (setidaknya sekitar 4%) tidak berisi keluhan, dan sebaliknya cukup banyak ulasan bintang 4 dan 5 berisi keluhan.
 - Ulasan berasal dari tahun 2019 dan dari sekitar 160 toko, dengan ulasan negatif yang didominasi kategori handphone.
 - Semua data adalah potret satu waktu, sehingga hasilnya menunjukkan hubungan, bukan sebab-akibat.
 
 ## Pelajaran dari proyek ini
 
 - Cara membagi data menentukan seberapa jujur skornya. Membagi per produk membuat model dinilai dengan ulasan dari produk yang belum pernah dilihatnya, sama seperti saat dipakai di dashboard.
-- Sebelum mengganti model, periksa labelnya. Pemeriksaan manual menunjukkan 62% alarm palsu ternyata keluhan berbintang 4-5, sehingga precision yang terukur (68%) jauh di bawah perkiraan sebenarnya (88%). Batas skor bisa datang dari label, bukan dari model.
+- Sebelum mengganti model, periksa labelnya. Pemeriksaan manual menunjukkan 62% alarm palsu ternyata keluhan berbintang 4-5, sehingga precision yang terukur di cross-validation (68%) jauh di bawah perkiraan sebenarnya (88%). Batas skor bisa datang dari label, bukan dari model.
 - Aturan berbasis kata kunci perlu diukur, bukan hanya dilihat contohnya. Akurasi kategori dihitung dari 200 produk acak yang tidak dipakai saat menyusun aturan, dan naik dari 84% menjadi 90% setelah aturan diperbaiki.
 - Kode data prep yang hanya ditulis sekali di folder src, lalu dipakai notebook, pipeline, dan dashboard dan diuji dengan pytest, mencegah angka yang berbeda di tempat yang berbeda.
 
